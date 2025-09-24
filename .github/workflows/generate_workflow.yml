@@ -25,10 +25,10 @@ jobs:
       - name: Run generator
         run: python .github/scripts/generate_workflow.py
         
-      - name: Commit final-workflow.yml
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add final-workflow.yml
-          git commit -m "Update final-workflow.yml [skip ci]" || echo "No changes to commit"
-          git push
+      # - name: Commit final-workflow.yml
+      #   run: |
+      #     git config --global user.name "github-actions[bot]"
+      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      #     git add final-workflow.yml
+      #     git commit -m "Update final-workflow.yml [skip ci]" || echo "No changes to commit"
+      #     git push
