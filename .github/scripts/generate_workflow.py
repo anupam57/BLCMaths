@@ -1,32 +1,46 @@
-name: Generate Workflow
+import yaml
+from pathlib import Path
 
-on:
-  pull_request:
-    paths:
-      - "clusters.yml"
-      - "workflow_template.yml"
-      - ".github/scripts/generate_workflow.py"
+INPUT_FILE = "clusters.yml"
+TEMPLATE_FILE = "workflow_template.yml"
+OUTPUT_FILE = ".github/workflows/generated.yml"
 
-jobs:
-  generate:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+# Load clusters
+with open(INPUT_FILE) as f:
+    clusters = yaml.safe_load(f)["clusters"]
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
+# Load template
+template = Path(TEMPLATE_FILE).read_text().splitlines()
 
-      - name: Install dependencies
-        run: pip install pyyaml
+# Extract the repeat block between markers
+start_idx = template.index("  # repeat for each cluster start") + 1
+end_idx = template.index("  # repeat for each cluster end")
 
-      - name: Run generator
-        run: python .github/scripts/generate_workflow.py
+repeat_block = template[start_idx:end_idx]
 
-      - name: Commit generated workflow
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: auto-generate workflow"
-          file_pattern: ".github/workflows/generated.yml"
+# Begin final content
+final_lines = []
+
+for line in template[:start_idx-1]:
+    final_lines.append(line)
+
+# Expand for each cluster
+previous = None
+for cluster in clusters:
+    for line in repeat_block:
+        new_line = line
+        new_line = new_line.replace("<cluster>", cluster)
+        if previous:
+            new_line = new_line.replace("<previous-cluster>", previous)
+        else:
+            # First cluster: remove ", promote-<previous-cluster>"
+            new_line = new_line.replace(", promote-<previous-cluster>", "")
+        final_lines.append(new_line)
+    final_lines.append("")  # spacing
+    previous = cluster
+
+# Write result
+output = "\n".join(final_lines) + "\n"
+Path(OUTPUT_FILE).write_text(output)
+
+print(f"✅ Workflow generated at {OUTPUT_FILE}")
