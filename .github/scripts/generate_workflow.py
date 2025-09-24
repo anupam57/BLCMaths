@@ -3,7 +3,7 @@ from pathlib import Path
 
 INPUT_FILE = "clusters.yml"
 TEMPLATE_FILE = "workflow_template.yml"
-OUTPUT_FILE = ".github/workflows/final-workflow.yml"
+OUTPUT_FILE = "final-workflow.yml"
 
 # Load clusters
 with open(INPUT_FILE) as f:
