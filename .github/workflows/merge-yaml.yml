@@ -1,7 +1,7 @@
-name: Merge YAML Files
+name: Merge Static YAML Files
 
 on:
-  workflow_dispatch:   # allows manual trigger
+  workflow_dispatch:   # run manually
   push:
     branches:
       - main
@@ -11,44 +11,50 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      # 2. Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
 
-      # 3. Install PyYAML
-      - name: Install dependencies
+      - name: Install PyYAML
         run: |
           python -m pip install --upgrade pip
           pip install pyyaml
 
-      # 4. Merge YAML files
       - name: Merge YAML files
         run: |
           cat << 'EOF' > merge_yaml.py
           import yaml
 
-          with open("file1.yml") as f1, open("file2.yml") as f2:
-              data1 = yaml.safe_load(f1)
-              data2 = yaml.safe_load(f2)
+          with open("config/file1.yml") as f1, open("config/file2.yml") as f2:
+              data1 = yaml.safe_load(f1) or {}
+              data2 = yaml.safe_load(f2) or {}
 
-          # simple merge: file2 keys overwrite file1
-          merged = {**data1, **data2}
+          # Deep merge function
+          def deep_merge(a, b):
+              if isinstance(a, dict) and isinstance(b, dict):
+                  merged = dict(a)
+                  for k, v in b.items():
+                      merged[k] = deep_merge(merged.get(k), v)
+                  return merged
+              elif isinstance(a, list) and isinstance(b, list):
+                  return a + b
+              else:
+                  return b if b is not None else a
+
+          merged = deep_merge(data1, data2)
 
           with open("merged.yml", "w") as out:
-              yaml.dump(merged, out)
+              yaml.dump(merged, out, sort_keys=False)
           EOF
 
           python merge_yaml.py
 
-      # 5. Upload merged YAML as artifact
       - name: Upload merged YAML
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: merged-yaml
           path: merged.yml
