@@ -1,18 +1,23 @@
-name: Merge Static YAML Files
+name: Merge YAML Into Branch
 
 on:
-  workflow_dispatch:   # run manually
   push:
     branches:
-      - main
+      - main   # or any branch you want this to run on
+  workflow_dispatch: # allows manual run too
 
 jobs:
   merge-yaml:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write   # required to push changes back
+
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # needed for committing
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -33,7 +38,6 @@ jobs:
               data1 = yaml.safe_load(f1) or {}
               data2 = yaml.safe_load(f2) or {}
 
-          # Deep merge function
           def deep_merge(a, b):
               if isinstance(a, dict) and isinstance(b, dict):
                   merged = dict(a)
@@ -53,8 +57,10 @@ jobs:
 
           python merge_yaml.py
 
-      - name: Upload merged YAML
-        uses: actions/upload-artifact@v4
-        with:
-          name: merged-yaml
-          path: merged.yml
+      - name: Commit merged.yml
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add merged.yml
+          git commit -m "Update merged.yml [skip ci]" || echo "No changes to commit"
+          git push
