@@ -66,4 +66,4 @@ for module_dir in Path(".").glob(f"{MODULE_PREFIX}*"):
     output = "\n".join(final_lines) + "\n"
     output_file.write_text(output)
 
-    print(f"✅ Workflow generated at {output_file}")
+    print(f"✅ Workflow generated at on hoon hoonnn {output_file}")
