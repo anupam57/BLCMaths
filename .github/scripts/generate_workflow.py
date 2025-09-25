@@ -1,46 +1,40 @@
+import os
 import yaml
-from pathlib import Path
 
-INPUT_FILE = "clusters.yml"
-TEMPLATE_FILE = "workflow_template.yml"
-OUTPUT_FILE = "final-workflow.yml"
+ROOT = os.getcwd()
+DEFAULT_CONFIG = os.path.join(ROOT, "default-config.yml")
 
-# Load clusters
-with open(INPUT_FILE) as f:
-    clusters = yaml.safe_load(f)["clusters"]
+# Load default config
+with open(DEFAULT_CONFIG) as f:
+    default_data = yaml.safe_load(f) or {}
 
-# Load template
-template = Path(TEMPLATE_FILE).read_text().splitlines()
+# Deep merge function
+def deep_merge(a, b):
+    if isinstance(a, dict) and isinstance(b, dict):
+        merged = dict(a)
+        for k, v in b.items():
+            merged[k] = deep_merge(merged.get(k), v)
+        return merged
+    elif isinstance(a, list) and isinstance(b, list):
+        return a + b
+    else:
+        return b if b is not None else a
 
-# Extract the repeat block between markers
-start_idx = template.index("  # repeat for each cluster start") + 1
-end_idx = template.index("  # repeat for each cluster end")
+# Iterate over module folders
+for folder in os.listdir(ROOT):
+    module_path = os.path.join(ROOT, folder)
+    config_file = os.path.join(module_path, "config.yml")
 
-repeat_block = template[start_idx:end_idx]
+    if os.path.isdir(module_path) and folder.startswith("Module") and os.path.exists(config_file):
+        with open(config_file) as f:
+            module_data = yaml.safe_load(f) or {}
 
-# Begin final content
-final_lines = []
+        # Merge default with module-specific
+        merged = deep_merge(default_data, module_data)
 
-for line in template[:start_idx-1]:
-    final_lines.append(line)
+        # Write final config in module folder
+        final_path = os.path.join(module_path, "final-config.yml")
+        with open(final_path, "w") as out:
+            yaml.dump(merged, out, sort_keys=False)
 
-# Expand for each cluster
-previous = None
-for cluster in clusters:
-    for line in repeat_block:
-        new_line = line
-        new_line = new_line.replace("<cluster>", cluster)
-        if previous:
-            new_line = new_line.replace("<previous-cluster>", previous)
-        else:
-            # First cluster: remove ", promote-<previous-cluster>"
-            new_line = new_line.replace(", promote-<previous-cluster>", "")
-        final_lines.append(new_line)
-    final_lines.append("")  # spacing
-    previous = cluster
-
-# Write result
-output = "\n".join(final_lines) + "\n"
-Path(OUTPUT_FILE).write_text(output)
-
-print(f"✅ Workflow generated at {OUTPUT_FILE}")
+        print(f"✅ Created {final_path}")
