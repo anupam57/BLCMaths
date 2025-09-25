@@ -1,5 +1,6 @@
-app:
-  name: myapp
-  address: BerlinA
-  ports:
-    - 8080
+clusters:
+  - de 
+  - us
+  - ind    
+notify_on_fail: false
+channel: teamA-notifications

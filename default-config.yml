@@ -1,6 +1,7 @@
-app:
-  name: myapp
-  lastname: myapp
-  address: Berlin
-  ports:
-    - 8080
+clusters:
+  - et 
+  - qt
+  - de
+  - sb    
+notify_on_fail: true
+channel: yoda-notifications

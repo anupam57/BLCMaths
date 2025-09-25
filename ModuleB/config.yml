@@ -1,5 +1,1 @@
-app:
-  name: myapp
-  address: BerlinB
-  ports:
-    - 8080
+channel: teamB-notifications
