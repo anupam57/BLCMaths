@@ -7,4 +7,5 @@ clusters:
 - us
 - ind
 notify_on_fail: false
+add_more: false
 channel: teamA-notifications
