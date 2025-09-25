@@ -1,10 +1,7 @@
 clusters:
 - et
 - qt
-- de
+- dt
 - sb
-- ind
 notify_on_fail: true
-add_more: false
-remove_less: false
 channel: teamB-notifications
