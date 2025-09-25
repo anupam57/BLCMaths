@@ -4,8 +4,13 @@ jobs:
     with:
       project-name: PROJECT_NAME
 
-  promote-dt:
+  promote-sb:
     needs: [ initialize ]
+    with:
+      environment: sb
+
+  promote-dt:
+    needs: [ initialize, promote-sb ]
     with:
       environment: dt
 
