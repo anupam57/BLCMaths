@@ -2,7 +2,9 @@ clusters:
   - et 
   - qt
   - de
-  - sb    
+  - sb
+  - pk    
 notify_on_fail: true
 add_more: false
+remove_less: false
 channel: yoda-notifications
