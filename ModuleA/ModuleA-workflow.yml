@@ -24,3 +24,8 @@ jobs:
     with:
       environment: cn
 
+  promote-eu:
+    needs: [ initialize, promote-cn ]
+    with:
+      environment: eu
+
