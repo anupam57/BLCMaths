@@ -5,3 +5,8 @@ clusters:
 - qt
 notify_on_fail: false
 channel: teamc-notifications
+module: Generic-Module
+placeholders:
+  MODULE_NAME:
+    value: Generic-Module
+    depends_on: module
