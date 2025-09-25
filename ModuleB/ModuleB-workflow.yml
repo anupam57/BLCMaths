@@ -2,7 +2,7 @@ jobs:
   initialize:
     uses: ./.github/workflows/ci_cd_initialize.yml
     with:
-      project-name: MyProject
+      project-name: PROJECT_NAME
       module: Generic-Module
 
   promote-et:
