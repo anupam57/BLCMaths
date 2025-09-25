@@ -16,7 +16,7 @@ def deep_merge(a, b):
             merged[k] = deep_merge(merged.get(k), v)
         return merged
     elif isinstance(a, list) and isinstance(b, list):
-        return a + b
+        return b
     else:
         return b if b is not None else a
 
