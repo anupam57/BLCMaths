@@ -1,7 +1,0 @@
-app:
-  name: myapp
-  address: Berlin
-  ports:
-  - 8080
-  - 9090
-  version: 1.2

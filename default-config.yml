@@ -3,6 +3,7 @@ clusters:
   - qt
   - de
   - sb
+  - ind
 notify_on_fail: true
 add_more: false
 remove_less: false
