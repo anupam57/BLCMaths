@@ -2,6 +2,7 @@ clusters:
   - de 
   - us
   - au 
-  - cn   
+  - cn  
+  - eu 
 notify_on_fail: false
 channel: teamA-notifications
