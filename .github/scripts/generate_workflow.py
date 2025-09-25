@@ -32,8 +32,7 @@ for module_dir in Path(".").glob(f"{MODULE_PREFIX}*"):
     final_lines = []
     for line in template[:start_idx-1]:
         for key, value in resolved_placeholders.items():
-            print(f"Please holders 🎉: {key} 🔑 {value}")
-            line = line.replace(f"<{key}>", value)
+            line = line.replace(f"{key}", value)
         final_lines.append(line)
 
     previous = None
@@ -46,7 +45,7 @@ for module_dir in Path(".").glob(f"{MODULE_PREFIX}*"):
                 new_line = new_line.replace(", promote-<previous-cluster>", "")
 
             for key, value in resolved_placeholders.items():
-                new_line = new_line.replace(f"<{key}>", value)
+                new_line = new_line.replace(f"{key}", value)
 
             final_lines.append(new_line)
         final_lines.append("")
