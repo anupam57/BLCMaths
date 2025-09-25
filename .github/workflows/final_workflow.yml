@@ -3,10 +3,10 @@ name: Merge Configs & Generate Workflows
 on:
   push:
     paths:
-      - "workflow_template.yml"
-      - ".github/scripts/generate_workflow.py"
+      - ".github/workflow-setup/push_template.yml"
+      - ".github/scripts/generate_workflow.py"      
+      - ".github/workflow-setup/default-config.yml"
       - "Module*/config.yml"
-      - "default-config.yml"
   workflow_dispatch:
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
           import yaml
 
           ROOT = os.getcwd()
-          DEFAULT_CONFIG = os.path.join(ROOT, "default-config.yml")
+          DEFAULT_CONFIG = os.path.join(ROOT, ".github/workflow-setup/default-config.yml")
 
           def deep_merge(a, b):
               if isinstance(a, dict) and isinstance(b, dict):

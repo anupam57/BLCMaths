@@ -1,0 +1,7 @@
+clusters:
+  - et
+  - qt 
+  - dt
+  - sb
+notify_on_fail: true
+channel: fsm-notifications
