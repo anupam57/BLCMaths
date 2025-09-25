@@ -19,3 +19,8 @@ jobs:
     with:
       environment: au
 
+  promote-cn:
+    needs: [ initialize, promote-au ]
+    with:
+      environment: cn
+
