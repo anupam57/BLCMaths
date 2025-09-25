@@ -3,21 +3,24 @@ name: Generate Workflow
 on:
   push:
     paths:
-      - "clusters.yml"
       - "workflow_template.yml"
       - ".github/scripts/generate_workflow.py"
+      - "Module*/final-config.yml"
+  workflow_dispatch:
 
 jobs:
   generate:
     runs-on: ubuntu-latest
-
+    
     permissions:
-      contents: write
-      workflows: write
+      contents: write     # required to commit files
+      workflows: write    # required to create/update workflow files
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # needed to push commits
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,15 +28,13 @@ jobs:
           python-version: "3.x"
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install --upgrade pip pyyaml
 
-      - name: Run generator
+      - name: Run workflow generator
         run: python .github/scripts/generate_workflow.py
-        
-      - name: Commit final-workflow.yml
+
+      - name: Commit generated workflows
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .github/workflows/*.yml
-          git commit -m "Update final-workflow.yml [skip ci]" || echo "No changes to commit"
-          git push
+          git add .gith
