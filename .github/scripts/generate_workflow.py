@@ -24,7 +24,7 @@ for module_dir in Path(".").glob(f"{MODULE_PREFIX}*"):
 
     clusters = config.get("clusters", [])
     placeholders = config.get("placeholders", {})
-
+    print(f"Please holders 🎉: {placeholders}")
     # unwrap placeholders: each key has {value: X}
     resolved_placeholders = {
         key: str(val.get("value", "")) for key, val in placeholders.items()
