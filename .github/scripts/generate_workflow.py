@@ -4,8 +4,6 @@ from pathlib import Path
 TEMPLATE_FILE = ".github/workflow-setup/push_template.yml"
 MODULE_PREFIX = "Module"
 CONFIG_FILE = "final-config.yml"
-WORKFLOW_DIR = Path(".github/workflows")
-WORKFLOW_DIR.mkdir(parents=True, exist_ok=True)
 
 # Load template
 template = Path(TEMPLATE_FILE).read_text().splitlines()
@@ -51,6 +49,6 @@ for module_dir in Path(".").glob(f"{MODULE_PREFIX}*"):
         final_lines.append("")
         previous = cluster
 
-    output_file = WORKFLOW_DIR / f"{module_dir.name}-workflow.yml"
+    output_file = module_dir / f"{module_dir.name}-workflow.yml"
     output_file.write_text("\n".join(final_lines) + "\n")
     print(f"✅ Workflow generated: {output_file}")
