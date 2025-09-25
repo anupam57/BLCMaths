@@ -27,6 +27,8 @@ for module_dir in Path(".").glob(f"{MODULE_PREFIX}*"):
         key: str(val.get("value", "")) for key, val in placeholders.items()
     }
 
+    resolved_placeholders["PROJECT_NAME"] = module_dir.name
+
     final_lines = []
     for line in template[:start_idx-1]:
         for key, value in resolved_placeholders.items():
