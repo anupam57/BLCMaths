@@ -1,0 +1,5 @@
+app:
+  name: myapp
+  address: BerlinA
+  ports:
+    - 8080
