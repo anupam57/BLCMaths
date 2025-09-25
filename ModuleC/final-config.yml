@@ -3,6 +3,12 @@ clusters:
 - dt
 - et
 - qt
+placeholders:
+  MODULE_NAME:
+    value: Generic-Module
+  PROJECT_NAME:
+    value: MyProject
+  NOTIFY_ON_FAIL:
+    value: true
 notify_on_fail: false
 channel: teamc-notifications
-module: Generic-Module
