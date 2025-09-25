@@ -1,14 +1,11 @@
-import os
 import yaml
+from pathlib import Path
 
-ROOT = os.getcwd()
-DEFAULT_CONFIG = os.path.join(ROOT, "default-config.yml")
+DEFAULT_FILE = "default-config.yml"
+MODULE_PREFIX = "Module"
+CONFIG_NAME = "config.yml"
+OUTPUT_NAME = "final-config.yml"
 
-# Load default config
-with open(DEFAULT_CONFIG) as f:
-    default_data = yaml.safe_load(f) or {}
-
-# Deep merge function
 def deep_merge(a, b):
     if isinstance(a, dict) and isinstance(b, dict):
         merged = dict(a)
@@ -16,25 +13,29 @@ def deep_merge(a, b):
             merged[k] = deep_merge(merged.get(k), v)
         return merged
     elif isinstance(a, list) and isinstance(b, list):
+        # Replace arrays completely (not append)
         return b
     else:
         return b if b is not None else a
 
-# Iterate over module folders
-for folder in os.listdir(ROOT):
-    module_path = os.path.join(ROOT, folder)
-    config_file = os.path.join(module_path, "config.yml")
+# Load default config
+with open(DEFAULT_FILE) as f:
+    default_config = yaml.safe_load(f) or {}
 
-    if os.path.isdir(module_path) and folder.startswith("Module") and os.path.exists(config_file):
-        with open(config_file) as f:
-            module_data = yaml.safe_load(f) or {}
+# Loop over all module folders
+for module_dir in Path(".").glob(f"{MODULE_PREFIX}*"):
+    config_file = module_dir / CONFIG_NAME
+    if not config_file.exists():
+        print(f"⚠️ Skipping {module_dir}, no {CONFIG_NAME}")
+        continue
 
-        # Merge default with module-specific
-        merged = deep_merge(default_data, module_data)
+    with open(config_file) as f:
+        module_config = yaml.safe_load(f) or {}
 
-        # Write final config in module folder
-        final_path = os.path.join(module_path, "final-config.yml")
-        with open(final_path, "w") as out:
-            yaml.dump(merged, out, sort_keys=False)
+    merged = deep_merge(default_config, module_config)
 
-        print(f"✅ Created {final_path}")
+    output_file = module_dir / OUTPUT_NAME
+    with open(output_file, "w") as out:
+        yaml.dump(merged, out, sort_keys=False)
+
+    print(f"✅ Generated {output_file}")
