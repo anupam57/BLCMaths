@@ -38,10 +38,6 @@ jobs:
           ROOT = os.getcwd()
           DEFAULT_CONFIG = os.path.join(ROOT, "default-config.yml")
 
-          # Load default config
-          with open(DEFAULT_CONFIG) as f:
-              default_data = yaml.safe_load(f) or {}
-
           def deep_merge(a, b):
               if isinstance(a, dict) and isinstance(b, dict):
                   merged = dict(a)
@@ -52,6 +48,10 @@ jobs:
                   return a + b
               else:
                   return b if b is not None else a
+                  
+          # Load default config
+          with open(DEFAULT_CONFIG) as f:
+              default_data = yaml.safe_load(f) or {}                  
 
           # Iterate over Module* folders
           for folder in os.listdir(ROOT):
