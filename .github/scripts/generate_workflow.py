@@ -1,7 +1,7 @@
 import yaml
 from pathlib import Path
 
-TEMPLATE_FILE = "workflow_template.yml"
+TEMPLATE_FILE = ".github/Template/workflow_template.yml"
 MODULE_PREFIX = "Module"
 MODULE_CONFIG = "final-config.yml"
 
