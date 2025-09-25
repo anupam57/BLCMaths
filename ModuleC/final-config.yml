@@ -1,6 +1,7 @@
 clusters:
+- sb
 - dt
 - et
 - qt
 notify_on_fail: false
-channel: fsm-notifications
+channel: teamc-notifications
