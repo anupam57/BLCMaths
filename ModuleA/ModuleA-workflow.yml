@@ -14,8 +14,8 @@ jobs:
     with:
       environment: us
 
-  promote-ind:
+  promote-au:
     needs: [ initialize, promote-us ]
     with:
-      environment: ind
+      environment: au
 

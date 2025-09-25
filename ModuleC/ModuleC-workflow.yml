@@ -4,8 +4,13 @@ jobs:
     with:
       project-name: PROJECT_NAME
 
-  promote-et:
+  promote-dt:
     needs: [ initialize ]
+    with:
+      environment: dt
+
+  promote-et:
+    needs: [ initialize, promote-dt ]
     with:
       environment: et
 
@@ -13,14 +18,4 @@ jobs:
     needs: [ initialize, promote-et ]
     with:
       environment: qt
-
-  promote-dt:
-    needs: [ initialize, promote-qt ]
-    with:
-      environment: dt
-
-  promote-sb:
-    needs: [ initialize, promote-dt ]
-    with:
-      environment: sb
 
