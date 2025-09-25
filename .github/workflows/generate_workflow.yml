@@ -1,5 +1,9 @@
 name: Generate Workflow
 
+permissions:
+  contents: write     # required to commit files
+  workflows: write    # required to create/update workflow files
+
 on:
   push:
     paths:
@@ -11,16 +15,12 @@ on:
 jobs:
   generate:
     runs-on: ubuntu-latest
-    
-    permissions:
-      contents: write     # required to commit files
-      workflows: write    # required to create/update workflow files
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # needed to push commits
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -37,4 +37,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .gith
+          git add .github/workflows/*.yml
+          git commit -m "Update module workflows [skip ci]" || echo "No changes to commit"
+          git push
