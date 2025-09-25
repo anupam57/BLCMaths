@@ -4,4 +4,5 @@ clusters:
   - de
   - sb    
 notify_on_fail: true
+add_more: false
 channel: yoda-notifications
