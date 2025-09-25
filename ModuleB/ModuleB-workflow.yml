@@ -24,3 +24,8 @@ jobs:
     with:
       environment: sb
 
+  promote-ind:
+    needs: [ initialize, promote-sb ]
+    with:
+      environment: ind
+
