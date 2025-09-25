@@ -1,6 +1,6 @@
 clusters:
   - de 
   - us
-  - ind    
+  - au    
 notify_on_fail: false
 channel: teamA-notifications
