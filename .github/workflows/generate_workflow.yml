@@ -1,9 +1,5 @@
 name: Generate Workflow
 
-permissions:
-  contents: write     # required to commit files
-  workflows: write    # required to create/update workflow files
-
 on:
   push:
     paths:
