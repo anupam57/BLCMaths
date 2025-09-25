@@ -1,11 +1,8 @@
 clusters:
-- et
-- qt
-- de
-- sb
 - de
 - us
 - ind
 notify_on_fail: false
 add_more: false
+remove_less: false
 channel: teamA-notifications
