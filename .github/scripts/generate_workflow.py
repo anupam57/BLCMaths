@@ -22,11 +22,13 @@ for module_dir in Path(".").glob(f"{MODULE_PREFIX}*"):
 
     clusters = config.get("clusters", [])
     placeholders = config.get("placeholders", {})
-    # unwrap placeholders: each key has {value: X}
+
+    ## Collecting placeholders from final-config.yml
     resolved_placeholders = {
         key: str(val.get("value", "")) for key, val in placeholders.items()
     }
 
+    ## Hardcode PROJECT_NAME to module_dir name
     resolved_placeholders["PROJECT_NAME"] = module_dir.name
 
     final_lines = []
