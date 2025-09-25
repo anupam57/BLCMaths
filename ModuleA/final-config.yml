@@ -1,0 +1,7 @@
+app:
+  name: myapp
+  lastname: myapp
+  address: BerlinA
+  ports:
+  - 8080
+  - 8080
