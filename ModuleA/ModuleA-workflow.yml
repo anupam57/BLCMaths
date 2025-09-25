@@ -1,0 +1,21 @@
+jobs:
+  initialize:
+    uses: ./.github/workflows/ci_cd_initialize.yml
+    with:
+      project-name: PROJECT_NAME
+
+  promote-de:
+    needs: [ initialize ]
+    with:
+      environment: de
+
+  promote-us:
+    needs: [ initialize, promote-de ]
+    with:
+      environment: us
+
+  promote-ind:
+    needs: [ initialize, promote-us ]
+    with:
+      environment: ind
+
