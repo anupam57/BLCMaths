@@ -24,7 +24,6 @@ for module_dir in Path(".").glob(f"{MODULE_PREFIX}*"):
 
     clusters = config.get("clusters", [])
     placeholders = config.get("placeholders", {})
-    print(f"Please holders 🎉: {placeholders}")
     # unwrap placeholders: each key has {value: X}
     resolved_placeholders = {
         key: str(val.get("value", "")) for key, val in placeholders.items()
@@ -33,6 +32,7 @@ for module_dir in Path(".").glob(f"{MODULE_PREFIX}*"):
     final_lines = []
     for line in template[:start_idx-1]:
         for key, value in resolved_placeholders.items():
+            print(f"Please holders 🎉: {key} 🔑 {value}")
             line = line.replace(f"<{key}>", value)
         final_lines.append(line)
 
