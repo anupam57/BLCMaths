@@ -7,8 +7,5 @@ placeholders:
   MODULE_NAME:
     value: Generic-Module
 
-  PROJECT_NAME:
-    value: MyProject
-
   NOTIFY_ON_FAIL:
     value: true
