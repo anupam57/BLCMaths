@@ -1,7 +1,7 @@
-app:
-  name: myapp
-  lastname: myapp
-  address: BerlinB
-  ports:
-  - 8080
-  - 8080
+clusters:
+- et
+- qt
+- de
+- sb
+notify_on_fail: true
+channel: teamB-notifications
