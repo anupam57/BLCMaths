@@ -24,8 +24,3 @@ jobs:
     with:
       environment: sb
 
-  promote-pk:
-    needs: [ initialize, promote-sb ]
-    with:
-      environment: pk
-
