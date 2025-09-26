@@ -1,8 +1,10 @@
 clusters:
   - de 
-  - us
   - au 
   - cn  
-  - eu 
-notify_on_fail: false
-channel: teamA-notifications
+placeholders:
+  MODULE_NAME:
+    value: TeamA
+
+  NOTIFY_ON_FAIL:
+    value: false
