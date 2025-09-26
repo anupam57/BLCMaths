@@ -1,6 +1,6 @@
 jobs:
   initialize:
-    uses: ./.github/workflows/ci_cd_initialize.yml
+    uses: ci_cd_initialize.yml
     with:
       project-name: ModuleB
       module: Generic-Module
