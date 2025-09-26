@@ -100,7 +100,6 @@ Placeholders inside the template are replaced with values from each module’s f
 💡 If PROJECT_NAME is explicitly defined in final-config.yml, it will override the folder name.
 
 ### 📊 Process Diagram
-mermaid
 ``` yml
 flowchart TD
     A[default-config.yml] --> C[merge_configs.py]
