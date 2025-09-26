@@ -90,7 +90,7 @@ jobs:
   # repeat for each cluster end
 
 ```
--
+
 ### 🔄 Placeholder Replacement
 Placeholders inside the template are replaced with values from each module’s `final-config.yml`.
 ``` 
@@ -101,7 +101,6 @@ Placeholders inside the template are replaced with values from each module’s `
 
 💡 `PROJECT_NAME` is explicitly defined in final-config.yml, it taken from the folder name.
 
--
 ### 🚀 Workflow
 The GitHub Actions workflow (.github/workflows/main.yml) runs automatically on pushes:
 ```
