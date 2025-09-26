@@ -12,13 +12,13 @@ This repository automates two related tasks for each module in the project:
 ```
 .github/
   workflows/
-    main.yml                  # Orchestrates config merge + workflow generation
+    final_workflow.ym          # First default + config = final-config. Then final-config + template = workflow
   workflow-setup/
-    default-config.yml         # Global default config
+    default-config.yml         # Global default config common for all
     push_template.yml          # Workflow template with placeholders
   scripts/
-    merge_configs.py           # Merges configs into final-config.yml
-    generate_workflow.py       # Generates workflows from final-config.yml
+    merge_configs.py           # Merges configs into final-config.yml. Essentially: workflow-setup/default-config.yml + ModuleX/config.yml = ModuleX/final-config.yml
+    generate_workflow.py       # Generates workflows from final-config.yml Essentially: ModuleX/final-config.yml + scripts/generate_workflow.py = ModuleX/ModuleX-workflow.yml
 ModuleA/
   config.yml                   # Module-specific overrides
   final-config.yml             # (generated)
@@ -32,8 +32,7 @@ ModuleB/
 
 Each module has a `config.yml` with overrides. These are merged with the root `.github/workflow-setup/default-config.yml` to produce a `final-config.yml`.
 
-### Example: `default-config.yml`
-
+#### Example: `default-config.yml`
 ```yaml
 clusters:
   - et
@@ -44,9 +43,11 @@ clusters:
 placeholders:
   NOTIFY_ON_FAIL:
     value: false
+  SLACK_CHANNEL:
+    value: draco
 ```
-Example: ModuleA/config.yml
 
+#### Example: ModuleA/config.yml
 ```yaml
 placeholders:
   MODULE_NAME:
@@ -54,7 +55,6 @@ placeholders:
 ```
 
 Generated: ModuleA/final-config.yml
-
 ```yaml
 clusters:
   - et
@@ -67,9 +67,11 @@ placeholders:
     value: Generic-Module
   NOTIFY_ON_FAIL:
     value: false
+  SLACK_CHANNEL:
+    value: draco
 ```
 
-### 📝 Workflow Template
+#### 📝 Workflow Template
 The file .github/workflow-setup/push_template.yml defines the skeleton workflow with placeholders:
 
 ```yaml
@@ -90,26 +92,15 @@ jobs:
 ```
 -
 ### 🔄 Placeholder Replacement
-Placeholders inside the template are replaced with values from each module’s final-config.yml.
+Placeholders inside the template are replaced with values from each module’s `final-config.yml`.
 ``` 
 <MODULE_NAME> → From module config
 <NOTIFY_ON_FAIL> → From module config
-<PROJECT_NAME> → Automatically replaced with module folder name (e.g., ModuleA)
+<PROJECT_NAME> → Automatically replaced with module folder name (e.g., ModuleA). // Attention please
 ```
 
-💡 If PROJECT_NAME is explicitly defined in final-config.yml, it will override the folder name.
+💡 `PROJECT_NAME` is explicitly defined in final-config.yml, it taken from the folder name.
 
-### 📊 Process Diagram
-``` yml
-flowchart TD
-    A[default-config.yml] --> C[merge_configs.py]
-    B[ModuleX/config.yml] --> C
-    C --> D[final-config.yml]
-
-    D --> E[generate_workflow.py]
-    T[push_template.yml] --> E
-    E --> F[ModuleX-workflow.yml]
-```
 -
 ### 🚀 Workflow
 The GitHub Actions workflow (.github/workflows/main.yml) runs automatically on pushes:
