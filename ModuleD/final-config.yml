@@ -7,6 +7,6 @@ placeholders:
   NOTIFY_ON_FAIL:
     value: true
   SLACK_CHANNEL:
-    value: yoda
+    value: ModuleD-slack-channel
 notify_on_fail: false
 channel: fsm-notifications
