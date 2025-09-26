@@ -1,0 +1,12 @@
+clusters:
+- et
+- qt
+- dt
+- sb
+placeholders:
+  MODULE_NAME:
+    value: Generic-Module
+  NOTIFY_ON_FAIL:
+    value: true
+  SLACK_CHANNEL:
+    value: yoda
