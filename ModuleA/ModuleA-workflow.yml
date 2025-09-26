@@ -4,29 +4,35 @@ jobs:
     with:
       project-name: ModuleA
       module: Generic-Module
+  
 
   promote-de:
     needs: [ initialize ]
     with:
       environment: de
+      slack: yoda
 
   promote-us:
     needs: [ initialize, promote-de ]
     with:
       environment: us
+      slack: yoda
 
   promote-au:
     needs: [ initialize, promote-us ]
     with:
       environment: au
+      slack: yoda
 
   promote-cn:
     needs: [ initialize, promote-au ]
     with:
       environment: cn
+      slack: yoda
 
   promote-eu:
     needs: [ initialize, promote-cn ]
     with:
       environment: eu
+      slack: yoda
 

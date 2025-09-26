@@ -4,24 +4,29 @@ jobs:
     with:
       project-name: ModuleB
       module: Generic-Module
+  
 
   promote-et:
     needs: [ initialize ]
     with:
       environment: et
+      slack: yoda
 
   promote-qt:
     needs: [ initialize, promote-et ]
     with:
       environment: qt
+      slack: yoda
 
   promote-dt:
     needs: [ initialize, promote-qt ]
     with:
       environment: dt
+      slack: yoda
 
   promote-sb:
     needs: [ initialize, promote-dt ]
     with:
       environment: sb
+      slack: yoda
 

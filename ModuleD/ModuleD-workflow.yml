@@ -4,14 +4,17 @@ jobs:
     with:
       project-name: ModuleD
       module: Generic-Module
+  
 
   promote-nb:
     needs: [ initialize ]
     with:
       environment: nb
+      slack: yoda
 
   promote-sa:
     needs: [ initialize, promote-nb ]
     with:
       environment: sa
+      slack: yoda
 
