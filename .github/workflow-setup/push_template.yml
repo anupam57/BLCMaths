@@ -4,10 +4,12 @@ jobs:
     with:
       project-name: PROJECT_NAME
       module: MODULE_NAME
+  
 
   # repeat for each cluster start
   promote-<cluster>:
     needs: [ initialize, promote-<previous-cluster> ]
     with:
       environment: <cluster>
+      slack: SLACK_CHANNEL
   # repeat for each cluster end
