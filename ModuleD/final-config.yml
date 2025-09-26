@@ -6,5 +6,7 @@ placeholders:
     value: Generic-Module
   NOTIFY_ON_FAIL:
     value: true
+  SLACK_CHANNEL:
+    value: yoda
 notify_on_fail: false
 channel: fsm-notifications
