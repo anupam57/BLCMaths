@@ -4,3 +4,7 @@ clusters:
 
 notify_on_fail: false
 channel: fsm-notifications
+
+placeholders:
+  SLACK_CHANNEL:
+    value: ModuleD-slack-channel
