@@ -91,12 +91,11 @@ jobs:
 -
 ### 🔄 Placeholder Replacement
 Placeholders inside the template are replaced with values from each module’s final-config.yml.
-
+``` 
 <MODULE_NAME> → From module config
-
 <NOTIFY_ON_FAIL> → From module config
-
 <PROJECT_NAME> → Automatically replaced with module folder name (e.g., ModuleA)
+```
 
 💡 If PROJECT_NAME is explicitly defined in final-config.yml, it will override the folder name.
 
@@ -112,35 +111,13 @@ flowchart TD
     T[push_template.yml] --> E
     E --> F[ModuleX-workflow.yml]
 ```
-
+-
 ### 🚀 Workflow
 The GitHub Actions workflow (.github/workflows/main.yml) runs automatically on pushes:
-
+```
 Merge configs → generates Module*/final-config.yml
 
 Generate workflows → generates Module*/Module*-workflow.yml
 
 Each module ends up with its own workflow YAML ready for GitHub Actions.
-
-▶️ Running Locally
-If you want to test outside of GitHub Actions:
-
-bash
-Copy code
-# Merge configs
-python .github/scripts/merge_configs.py
-
-# Generate workflows
-python .github/scripts/generate_workflow.py
-✅ Benefits
-No duplicated config — defaults live in one place
-
-Each module has its own clean workflow file
-
-Adding new placeholders doesn’t require changing scripts
-
-Flexible: module-specific overrides + auto-injected values
-
-pgsql
-Copy code
-
+```
