@@ -10,11 +10,11 @@ jobs:
     needs: [ initialize ]
     with:
       environment: nb
-      slack: yoda
+      slack: ModuleD-slack-channel
 
   promote-sa:
     needs: [ initialize, promote-nb ]
     with:
       environment: sa
-      slack: yoda
+      slack: ModuleD-slack-channel
 
