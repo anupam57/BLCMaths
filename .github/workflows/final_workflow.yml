@@ -4,7 +4,8 @@ on:
   push:
     paths:
       - ".github/workflow-setup/push_template.yml"
-      - ".github/scripts/generate_workflow.py"      
+      - ".github/scripts/generate_workflow.ts"
+      - ".github/scripts/merge_configs.ts"
       - ".github/workflow-setup/default-config.yml"
       - "Module*/config.yml"
   workflow_dispatch:
@@ -21,16 +22,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: "3.x"
+          node-version: "20"   # or "18" depending on your needs
 
       - name: Install dependencies
-        run: pip install --upgrade pip pyyaml
+        run: |
+          npm install -g ts-node typescript
+          npm install yaml deepmerge
 
       - name: Merge YAML configs for all modules
-        run: python .github/scripts/merge_configs.py
+        run: ts-node .github/scripts/merge_configs.ts
 
       - name: Commit updated final-config.yml files
         run: |
@@ -41,7 +44,7 @@ jobs:
           git push
 
       - name: Run workflow generator
-        run: python .github/scripts/generate_workflow.py
+        run: ts-node .github/scripts/generate_workflow.ts
 
       - name: Commit generated module workflows
         run: |
