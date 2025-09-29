@@ -32,8 +32,8 @@ jobs:
           npm install -g ts-node typescript
           npm install yaml deepmerge
 
-      - name: Merge YAML configs for all modules
-        run: ts-node .github/scripts/merge_configs.ts
+      - name: Merge configs
+        run: npx ts-node .github/scripts/merge_configs.ts
 
       - name: Commit updated final-config.yml files
         run: |
