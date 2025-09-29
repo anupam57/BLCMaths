@@ -1,0 +1,55 @@
+name: Merge Configs & Generate Workflows
+
+on:
+  push:
+    paths:
+      - ".github/workflow-setup/push_template.yml"
+      - ".github/scripts/generate_workflow.ts"
+      - ".github/scripts/merge_configs.ts"
+      - ".github/workflow-setup/default-config.yml"
+      - "Module*/config.yml"
+  workflow_dispatch:
+
+jobs:
+  merge-and-generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"   # or "18" depending on your needs
+
+      - name: Install dependencies
+        run: |
+          npm install -g ts-node typescript
+          npm install yaml deepmerge
+
+      - name: Merge configs
+        run: npx ts-node .github/scripts/merge_configs.ts
+
+      - name: Commit updated final-config.yml files
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add Module*/final-config.yml
+          git commit -m "Update final-config.yml for all modules [skip ci]" || echo "No changes to commit"
+          git push
+
+      - name: Run workflow generator
+        run: ts-node .github/scripts/generate_workflow.ts
+
+      - name: Commit generated module workflows
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add Module*/Module*-workflow.yml
+          git commit -m "Update module workflows [skip ci]" || echo "No changes to commit"
+          git push

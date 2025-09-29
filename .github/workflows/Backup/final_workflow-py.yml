@@ -1,0 +1,52 @@
+name: Merge Configs & Generate Workflows
+
+on:
+  push:
+    paths:
+      - ".github/workflow-setup/push_template.yml"
+      - ".github/scripts/generate_workflow.py"      
+      - ".github/workflow-setup/default-config.yml"
+      - "Module*/config.yml"
+  workflow_dispatch:
+
+jobs:
+  merge-and-generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install --upgrade pip pyyaml
+
+      - name: Merge YAML configs for all modules
+        run: python .github/scripts/merge_configs.py
+
+      - name: Commit updated final-config.yml files
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add Module*/final-config.yml
+          git commit -m "Update final-config.yml for all modules [skip ci]" || echo "No changes to commit"
+          git push
+
+      - name: Run workflow generator
+        run: python .github/scripts/generate_workflow.py
+
+      - name: Commit generated module workflows
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add Module*/Module*-workflow.yml
+          git commit -m "Update module workflows [skip ci]" || echo "No changes to commit"
+          git push
