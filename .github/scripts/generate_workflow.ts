@@ -1,7 +1,7 @@
 // .github/scripts/generate_workflow.ts
 import * as fs from "fs";
 import * as path from "path";
-import * as yaml from "yaml";
+import * as yaml from "yaml";  // npm install yaml
 
 const TEMPLATE_FILE = ".github/workflow-setup/push_template.yml";
 const MODULE_PREFIX = "Module";
