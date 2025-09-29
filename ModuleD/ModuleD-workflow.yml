@@ -18,3 +18,9 @@ jobs:
       environment: sa
       slack: ModuleD-slack-channel
 
+  promote-po:
+    needs: [ initialize, promote-sa ]
+    with:
+      environment: po
+      slack: ModuleD-slack-channel
+
