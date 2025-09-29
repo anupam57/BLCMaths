@@ -1,6 +1,7 @@
 clusters:
 - nb
 - sa
+- po
 placeholders:
   MODULE_NAME:
     value: Generic-Module
