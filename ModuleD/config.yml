@@ -1,6 +1,7 @@
 clusters:
   - nb
   - sa 
+  - po
 
 notify_on_fail: false
 channel: fsm-notifications
