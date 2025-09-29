@@ -1,61 +1,44 @@
-import { mergeYAML } from "yaml-merge";
-import { parse, stringify } from "yaml";
-import * as fs from "fs-extra";
+// .github/scripts/merge_configs.ts
+import * as fs from "fs";
+import * as path from "path";
+import * as yaml from "yaml";
 import deepmerge from "deepmerge";
-import path from "path";
 
-interface SomeConfigType {
-    // define types according to your YAML structure
-    [key: string]: any;
+const DEFAULT_CONFIG = ".github/workflow-setup/default-config.yml";
+const CONFIG_FILE = "config.yml";
+const FINAL_CONFIG_FILE = "final-config.yml";
+const MODULE_PREFIX = "Module";
+
+// Helper: merge two YAML files
+function mergeYamlFiles(baseFile: string, overrideFile: string): any {
+    const baseYaml = fs.existsSync(baseFile) ? fs.readFileSync(baseFile, "utf8") : "";
+    const overrideYaml = fs.existsSync(overrideFile) ? fs.readFileSync(overrideFile, "utf8") : "";
+
+    const baseConfig = baseYaml ? yaml.parse(baseYaml) || {} : {};
+    const overrideConfig = overrideYaml ? yaml.parse(overrideYaml) || {} : {};
+
+    return deepmerge(baseConfig, overrideConfig);
 }
 
-/**
- * Merge multiple YAML configuration files into one, writing output.
- * 
- * @param inputPaths Paths of YAML config files to merge (in order).
- * @param outputPath Path to write merged YAML.
- */
-async function mergeConfigs(inputPaths: string[], outputPath: string) {
-    // Option A: Use yaml-merge if it fits
-    try {
-        const mergedYaml = await mergeYAML(inputPaths, {
-            // some options if yaml-merge supports (if required)
-        });
-        await fs.outputFile(outputPath, mergedYaml);
-        console.log(`Merged YAML written to ${outputPath}`);
-        return;
-    } catch (e) {
-        console.warn("yaml-merge method failed; falling back to manual merge", e);
+function main() {
+    const cwd = process.cwd();
+    const moduleDirs = fs.readdirSync(cwd).filter((d) => d.startsWith(MODULE_PREFIX));
+
+    for (const dir of moduleDirs) {
+        const moduleDir = path.join(cwd, dir);
+        const configPath = path.join(moduleDir, CONFIG_FILE);
+
+        if (!fs.existsSync(configPath)) {
+            console.log(`⚠️ Skipping ${dir}, no ${CONFIG_FILE}`);
+            continue;
+        }
+
+        const finalConfig = mergeYamlFiles(DEFAULT_CONFIG, configPath);
+
+        const outPath = path.join(moduleDir, FINAL_CONFIG_FILE);
+        fs.writeFileSync(outPath, yaml.stringify(finalConfig), "utf8");
+        console.log(`✅ Final config written: ${outPath}`);
     }
-
-    // Option B: Parse + deep merge + stringify
-    const docs: SomeConfigType[] = [];
-    for (const p of inputPaths) {
-        const content = await fs.readFile(p, "utf8");
-        const doc = parse(content) as SomeConfigType;
-        docs.push(doc);
-    }
-
-    // Deep merge all docs in order
-    const mergedObj = docs.reduce((acc, doc) => deepmerge(acc, doc), {} as SomeConfigType);
-
-    // Convert back to YAML
-    const mergedYaml = stringify(mergedObj);
-
-    // Write to file
-    await fs.outputFile(outputPath, mergedYaml);
-    console.log(`Merged YAML written to ${outputPath}`);
 }
 
-// Example usage (can be adapted to CLI)
-// Suppose in Python script they did something like merging “base.yml + override.yml”:
-const inputs = [
-    path.join(__dirname, "../configs/base.yml"),
-    path.join(__dirname, "../configs/override.yml"),
-];
-const out = path.join(__dirname, "../configs/merged.yml");
-
-mergeConfigs(inputs, out).catch(err => {
-    console.error("Error during merge:", err);
-    process.exit(1);
-});
+main();
